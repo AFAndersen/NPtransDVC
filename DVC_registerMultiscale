@@ -1,0 +1,88 @@
+#import relevant packages
+
+import matplotlib.pyplot as plt
+from matplotlib_scalebar.scalebar import ScaleBar
+import numpy as np
+import tifffile
+from tifffile import imsave
+import skimage.filters
+import skimage.measure
+import spam
+import spam.DIC as DIC
+import spam.plotting
+import spam.label
+import time
+
+#%%
+
+#Define the paths of the binned images
+t0 = "/path/to/binned/image/step_00.tif"
+t1 = "/path/to/binned/image/step_01.tif"
+t2 = "/path/to/binned/image/step_02.tif"
+t3 = "/path/to/binned/image/step_03.tif"
+t4 = "/path/to/binned/image/step_04.tif"
+t5 = "/path/to/binned/image/step_05.tif"
+
+time_step_names = np.array(['00', '01', '02', '03', '04', '05'])
+time_step_dir = np.array([t0, t1, t2, t3, t4, t5])
+
+#Define functions for loading .tif-files
+def load_time_step(time_step_n):
+    time_step = tifffile.imread(time_step_dir[time_step_n])
+    return time_step
+
+#Load all .tif-files
+time_steps = []
+for i in range(len(time_step_neames)):
+    time_steps.append(load_time_step(i))
+
+#The following performs image registration between every time step and t0, and applies the relevant phis to t0. This gives the resulting difference images
+#
+
+phis = []
+data = []
+for i in range(1, len(time_step_names)):
+    start_i = time.time()
+    line = []
+    if i == 1:
+        start = time.time()
+          
+    reg_multi = DIC.registerMultiscale(time_steps[0],
+                                       time_steps[i],
+                                       binStart=4,
+                                       binStop=1,
+                                       im1mask=None,
+                                       PhiInit=None,
+                                       PhiRigid=False,
+                                       PhiInitBinRatio=1.0,
+                                       margin=50,
+                                       maxIterations=50,
+                                       deltaPhiMin=0.0001,
+                                       updateGradient=False,
+                                       interpolationOrder=1,
+                                       interpolator='python',
+                                       verbose=False,
+                                       imShowProgress=False,
+                                       forceChangeScale=False)
+
+        
+    phi = np.array(reg_multi['Phi'])
+    np.savetxt('output/directory/for/phi_'+time_step_names[i]+'.csv', phi, delimiter="," )
+    phis.append(phi)
+    
+    volmoved = DIC.applyPhi(time_steps[0], Phi=phi)
+    newvol = time_steps[i]-volmoved
+    
+    # Save the array as a TIFF file at a specific path
+    save_path = '/desired/outpu/directory'+time_step_names[i]+'.tif'
+    tifffile.imwrite(save_path, newvol)
+    
+    t_i = time.time() - start_i
+    t_tot = time.time() - start
+    line.append(str(i))
+    line.append(t_i)
+    data.append(line)
+    print('This loop took'+f'{t_i}')
+print(f'This function took {t_tot}')
+np.savetxt('/output/directory/for/phis/data.csv', data, delimiter="," )
+
