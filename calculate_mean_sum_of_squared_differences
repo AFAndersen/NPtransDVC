@@ -1,0 +1,56 @@
+
+import tifffile
+import spam
+import numpy as np
+import spam.plotting
+
+def image_error(image1, image2):
+    # Check if the images have the same shape
+    if image1.shape != image2.shape:
+        raise ValueError("Images must have the same shape.")
+
+    # Calculate the mean of squared differences
+    squared_diff = np.sum(np.square(image1 - image2))/np.size(image1)
+
+    return squared_diff
+    
+
+#%%
+
+step_00 = tifffile.imread("/path/to/t0.tif")
+step_01 = tifffile.imread("/path/to/t1.tif")
+reg_00_01 = tifffile.imread("/path/to/t0/correlated/to/t1/using/registerMultiscale.tif")
+reg_opt_00_01 = tifffile.imread("/path/to/t0/correlated/to/t1/using/registerMultiscale/and/opticalflow.tif")
+pxsddic_00_01 = tifffile.imread("/path/to/t0/correlated/to/t1/using/pixelsearch/and/DDIC.tif.tif")
+opt_00_01 = tifffile.imread("/path/to/t0/correlated/to/t1/using/opticalflow.tif")
+
+#%%
+
+t0s = np.array([step_00,
+                reg_00_01,
+                pxsddic_00_01,
+                opt_00_01,
+                reg_opt_00_01])
+
+
+errors = []
+for i in range(len(t0s)):
+    errors.append(image_error(t0s[i], step_01))
+
+print(errors)
+
+#%%
+Z, Y, X = step_00.shape
+
+t0s_crop = np.array([step_00[2:Z-2, 0:Y, 0:X],
+                     reg_00_01[2:Z-2, 0:Y, 0:X],
+                     pxsddic_00_01[2:Z-2, 0:Y, 0:X],
+                     opt_00_01[2:Z-2, 0:Y, 0:X],
+                     reg_opt_00_01[2:Z-2, 0:Y, 0:X]])
+
+
+errors_crop = []
+for i in range(len(t0s_crop)):
+    errors_crop.append(image_error(t0s_crop[i], step_01[2:Z-2, 0:Y, 0:X]))
+
+print(errors_crop)
