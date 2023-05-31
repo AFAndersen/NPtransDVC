@@ -25,29 +25,15 @@ t0 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/bin2_series/step_0
 t0_mask = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/bin2_label.tif"
 
 # Define the path of the difference images
-t1 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-01.tif"
-t2 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-02.tif"
-t3 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-03.tif"
-t4 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-04.tif"
-t5 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-05.tif"
-t6 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-06.tif"
-t7 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-07.tif"
-t8 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-08.tif"
-t9 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-09.tif"
-t10 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-10.tif"
-t11 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-11.tif"
-t12 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-12.tif"
-t13 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-13.tif"
-t14 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-14.tif"
-t15 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-15.tif"
-t16 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-16.tif"
-t17 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-17.tif"
-t18 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-18.tif"
-t19 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-19.tif"
+d1 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-01.tif"
+d2 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-02.tif"
+d3 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-03.tif"
+d4 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-04.tif"
+d5 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-05.tif"
 
 # An array of names and paths are defined
-time_step_names = np.array(['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9', 't10', 't11', 't12', 't13', 't14', 't15', 't16', 't17', 't18', 't19'])
-time_step_dir = np.array([t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19])
+time_step_names = np.array(['t0', 'd1', 'd2', 'd3', 'd4', 'd5'])
+time_step_dir = np.array([t0, d1, d2, d3, d4, d5])
 
 # This function loads a given time step, by using the time step index as input
 def load_time_step(time_step_n):
@@ -56,7 +42,7 @@ def load_time_step(time_step_n):
 
 # Here all images are loaded
 time_steps = []
-for i in range(20):
+for i in range(len(time_step_names)):
     time_steps.append(load_time_step(i))
 
 #Define the used binning and the pixel size in µm will be computed
@@ -67,7 +53,7 @@ pixel_size = binning*1.35
 #crop the volume in the top and in the bottom by two slices, and print the new shape of the volume
 Z, Y, X = time_steps[0].shape
 time_steps_c = []
-for i in range(20):
+for i in range(len(time_step_names)):
     time_step_c=time_steps[i]
     time_steps_c.append(time_step_c[2:Z-2, 0:Y, 0:X])
 
@@ -115,23 +101,377 @@ plt.legend(fontsize=12)
 # Display the plot
 plt.show()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #set the threshold value that segments the nanoparticles
-threshold = std*2+mean
+threshold = np.std(results[18])*2+np.mean(results[18])
 
 #create the binary images of nanoparticles
 binary_time_steps = []
 for i in range(len(time_steps_c)):
     binary_time_steps.append(time_steps_c[i] > threshold)
+    #save_path2 = '/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/binary_NPs/'+time_step_names[i]+'_NP_thresh_2_sigma.tif'
+    #tifffile.imwrite(save_path2, binary_time_steps[i])
+    print(i)
+
+#%%
+
+#Create the labelled images 
+labels = []
+for i in range(1,len(binary_time_steps)):
+    label = skimage.measure.label(binary_time_steps[i], connectivity=3)
+    labels.append(label)
+    save_path = '/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/labelled_NPs/'+time_step_names[i]+'_labelled_NP_2sigma.tif'
+    tifffile.imwrite(save_path, label)
+    print(i)
+
+
+#%%
+Z, Y, X = labels[0].shape
+
+#compute the sum of voxels in every layer of every volume
+layer_sums = []
+for i in range(len(binary_time_steps)):
+    layer_sums.append(np.sum(binary_time_steps[i], axis=(1,2)))
+    
+#%%
+
+#plot how the number of NP voxels in a layer depends on the number of the layer for multible time steps
+slices = np.arange(len(layer_sums[0]))
+
+plt.plot(slices, layer_sums[1], '-', color='r', label='d1')
+plt.plot(slices, layer_sums[7], '-', color='b', label='d7')
+plt.plot(slices, layer_sums[10], '-', color='violet', label='d10')
+plt.plot(slices, layer_sums[13], '-', color='g', label='d13')
+plt.plot(slices, layer_sums[19], '-', color='y', label='d19')
+plt.xlabel('Slice number', fontsize=12)
+plt.ylabel('Sum of layer, [#Pixels]', fontsize=12)
+plt.title('Sum of each Layer', fontsize=14, fontweight='bold')
+plt.grid(False)
+plt.legend(loc='upper left', fontsize=10)
+plt.show()
+
+#%%
+
+#plot how the number of NP voxels in a layer depends on the number of the layer for multible time steps
+slices = np.arange(len(layer_sums[0]))
+
+layer_sums_d1 = (layer_sums-layer_sums[1])
+
+plt.plot(slices, layer_sums[1], '-', color='r', label='d1')
+plt.plot(slices, layer_sums_d1[7], '-', color='b', label='d7-d1')
+plt.plot(slices, layer_sums_d1[10], '-', color='violet', label='d10-d1')
+plt.plot(slices, layer_sums_d1[13], '-', color='g', label='d13-d1')
+plt.plot(slices, layer_sums_d1[19], '-', color='y', label='d19-d1')
+plt.xlabel('XY-slice', fontsize=14)
+plt.ylabel('NP volume, [#voxels]', fontsize=14)
+plt.title('NP volume of XY-slices', fontsize=16, fontweight='bold')
+plt.grid(False)
+plt.legend(loc='upper left', fontsize=10)
+plt.show()
+
+#%%
+
+layer_um = (layer_sums_d1*np.ones(len(slices))*(10**(-9))*(pixel_size**3))
+
+layer_fracs = []
+for i in range(1, len(layer_um)):
+    layer_fracs.append((layer_um[i]/(vols_um[i-1]-vols_um[0]))*100)
+
+plt.plot(slices, layer_fracs[1], '-', color='r', label='d2')
+plt.plot(slices, layer_fracs[3], '-', color='b', label='d4')
+plt.plot(slices, layer_fracs[5], '-', color='violet', label='d6')
+plt.plot(slices, layer_fracs[14], '-', color='g', label='d15')
+plt.plot(slices, layer_fracs[18], '-', color='y', label='d19')
+plt.xlabel('XY-slice', fontsize=14)
+plt.ylabel('NP volume fraction [%]', fontsize=14)
+plt.title('NP volume fraction of XY-slices', fontsize=16, fontweight='bold')
+plt.grid(False)
+plt.legend(loc='upper left', fontsize=10)
+plt.show()
+
+#%%
+
+#plot how the total volume of NPs evolve with time
+step = np.arange(1, len(binary_time_steps))
+vol_sums = []
+for i in range(len(layer_sums)-1):
+    vol_sums.append(np.sum(layer_sums[i+1]))
+
+plt.plot(step, vol_sums, '-', color='r', label='NP volume')
+plt.xlabel('Time step', fontsize=12)
+plt.ylabel('Sum of NPs, [#voxels]', fontsize=12)
+plt.title('Sum of each time step', fontsize=14, fontweight='bold')
+plt.grid(False)
+plt.legend(loc='upper left', fontsize=10)
+plt.show()
+
+#%%
+
+#Make a list that contains arrays of all label volumes in every time step
+vols = []
+
+for label in labels:
+    props = skimage.measure.regionprops(label)
+    label_vols = [prop.area for prop in props]
+    vols.append(label_vols)
+
+#%%
+
+#make a plot of how the cummulated frquency of different cluster volumes 
+vols_cf = []
+vols_c = []
+for i in range(len(vols)):
+    vols_c.append(np.sort((np.cumsum(vols[i]))))
+    vols_cf.append(vols_c[i]/np.sum(vols[i]))
+    print(i)
+
+plt.plot(np.sort(vols[2]), vols_cf[2], '-', color='r', label='t2')
+plt.plot(np.sort(vols[7]), vols_cf[7], '-', color='b', label='t7')
+plt.plot(np.sort(vols[10]), vols_cf[10], '-', color='g', label='t10')
+plt.plot(np.sort(vols[14]), vols_cf[14], '-', color='y', label='t14')
+plt.plot(np.sort(vols[18]), vols_cf[18], '-', color='black', label='t19')
+plt.xlabel('NP cluster size [#Pixels]', fontsize=12)
+plt.ylabel('Cummulated frequency', fontsize=12)
+plt.title('Cumulated frequency', fontsize=14, fontweight='bold')
+plt.grid(False)
+plt.legend(loc='right', fontsize=10)
+plt.show()
+
+#%%
+
+#Compute various statistical descriptors
+from scipy import stats
+
+means = np.zeros(len(vols))
+stds = np.zeros(len(vols))
+medians = np.zeros(len(vols))
+maxs = np.zeros(len(vols))
+mins = np.zeros(len(vols))
+q1s = np.zeros(len(vols))
+q3s = np.zeros(len(vols))
+modes = np.zeros(len(vols))
+
+for i in range(len(vols)):
+    means[i] = np.mean(vols[i])
+    stds[i] = np.std(vols[i])
+    medians[i] = np.median(vols[i])
+    maxs[i] = np.max(vols[i])
+    mins[i] = np.min(vols[i])
+    q1s[i] = np.percentile(vols[i], 25)
+    q3s[i] = np.percentile(vols[i], 75)
+    modes[i] = stats.mode(vols[i]).mode[0]
+    print(i)
+    
+
+stats = [means, stds, mins, modes, maxs, q1s, medians, q3s]
+
+#%%
+
+#Compute various statistical descriptors while excluding observations/volumes that are less then the cutoff value
+cutoff = 3
+
+vols_copy = vols.copy()  # Create a copy of the vols list
+mvols = []
+
+for i in range(len(vols)):
+    mvols_copy = np.array(vols_copy[i])  # Convert to NumPy array
+    mvols.append(mvols_copy[np.where(mvols_copy > cutoff)])
+
+means = np.zeros(len(mvols))
+stds = np.zeros(len(mvols))
+medians = np.zeros(len(mvols))
+maxs = np.zeros(len(mvols))
+mins = np.zeros(len(mvols))
+q1s = np.zeros(len(mvols))
+q3s = np.zeros(len(mvols))
+modes = np.zeros(len(mvols))
+
+for i in range(len(mvols)):
+    means[i] = np.mean(mvols[i])
+    stds[i] = np.std(mvols[i])
+    medians[i] = np.median(mvols[i])
+    maxs[i] = np.max(mvols[i])
+    mins[i] = np.min(mvols[i])
+    q1s[i] = np.percentile(mvols[i], 25)
+    q3s[i] = np.percentile(mvols[i], 75)
+    unique_vals, counts = np.unique(mvols[i], return_counts=True)
+    modes[i] = unique_vals[np.argmax(counts)]
+    print(i)
+
+stats_masked = [means, stds, mins, modes, maxs, q1s, medians, q3s]
+
+#%%
+
+#Plot statistical descriptors for every time step
+plt.plot(np.arange(len(stats_masked[6]))+1, stats_masked[6], '-', color='r', label='Median')
+plt.plot(np.arange(len(stats_masked[5]))+1, stats_masked[4], '-', color='g', label='max')
+plt.plot(np.arange(len(stats_masked[7]))+1, stats_masked[0], '-', color='b', label='Means')
+plt.xlabel('Time step', fontsize=14)
+plt.ylabel('NP cluster size', fontsize=14)
+plt.title('Sum of each time step', fontsize=16, fontweight='bold')
+plt.grid(False)
+plt.legend(loc='upper right', fontsize=10)
+plt.show()
+
+#%%
+
+import localthickness as lt
+
+bin_vol = tifffile.imread("/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/bin2_label.tif")
+bin_vol = bin_vol>0
+
+# Compute local thickness using scaled approach.
+thickness = lt.local_thickness(bin_vol, scale=0.25)
+
+#%%
+
+bin_vol_inv = bin_vol == 0
+thickness_PS = lt.local_thickness(bin_vol_inv, scale=0.25)
+
+Z, Y, X = thickness_PS.shape
+
+pores_LT = thickness_PS[2:Z-2, 0:Y, 0:X]
+
+#%%
+
+lt_dist = []
+for i in range(1, len(binary_time_steps)):
+    lt_dist.append(np.extract(binary_time_steps[i], pores_LT))
+
+#%%
+# Set the number of bins
+bins = 35
+
+denominator_values = pores_LT.flatten()
+denominator_values = denominator_values[(denominator_values > 1) & (denominator_values < 35)]
+hist_pore, _ = np.histogram(denominator_values, bins=bins)
+
+hist_lt0 = lt_dist[0]
+hist_lt0  = hist_lt0 [(hist_lt0  > 1) & (hist_lt0 < 35)]
+hist_lt0, _ = np.histogram(hist_lt0, bins=bins)
+
+# Create the histograms
+for i in range(1, len(lt_dist)):
+    lt_dist_list = lt_dist[i]
+    lt_dist_hist = lt_dist_list[(lt_dist_list > 1) & (lt_dist_list < 35)]
+    hist_lt, _ = np.histogram(lt_dist_hist, bins=bins)
+
+    # Calculate the bin centers for plotting
+    bin_centers = 0.5 * (_[1:] + _[:-1])
+
+    # Plot the histograms as line plots
+    plt.plot(bin_centers, (hist_lt-hist_lt0)/hist_pore, label=f'd{i+1}-d1')
+
+
+# Set labels and title
+plt.xlabel('Local thickness of pore space occupied by NPs [#voxels]', fontsize=14)
+plt.ylabel('NP volume fraction', fontsize=14)
+plt.title('NP volume fraction occupying pore space of various local thicknesses', fontsize=16, fontweight='bold')
+
+# Add a legend
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=10)
+
+plt.tick_params(axis='both', which='major', labelsize=12)
+
+# Display the plot
+plt.show()
+
+#%%
+
+counts = []
+for i in range(1,len(binary_time_steps)-1):
+    # First binary array
+    array1 = binary_time_steps[i+1]
+    
+    # Second binary array
+    array2 = binary_time_steps[i]
+    
+    # Subtract array2 from array1 and set the conditions
+    result = np.where(array1 > array2, 1, np.where(array1 < array2, -1, 0))
+    
+    change_mask = np.logical_or(array1, array2).astype(int)
+    
+    count_neg = np.count_nonzero(result * change_mask == -1)
+    print(count_neg)
+    
+    count_pos = np.count_nonzero(result * change_mask == 1)
+    print(count_pos)
+    
+    count_zero = np.sum(change_mask)-count_neg-count_pos
+    print(count_zero)
+    
+    counts.append(np.array([count_pos, count_zero, count_neg]))
+
+
+
+pos_counts = np.zeros(18)
+zero_counts = np.zeros(18)
+neg_counts = np.zeros(18)
+for i in range(len(pos_counts)):
+    pos_counts[i] = counts[i][0]
+    zero_counts[i] = counts[i][1]
+    neg_counts[i] = counts[i][2]
+
+#%%
+
+added = pos_counts-neg_counts
+dynamic = neg_counts+(pos_counts-added)
+stationary = zero_counts
+summed = added+dynamic+stationary
+frequensies = np.array([stationary/summed, dynamic/summed, added/summed])
+
+#%%
+
+# Data for the bar plot
+categories = ['c2', 'c3', 'c4', 'c5']
+phases = ['Stationary NPs', 'Dynamic NPs', 'Additional NPs']
+frequencies = np.transpose(np.array([stationary, dynamic, added]))
+total_frequencies = np.sum(frequencies, axis=1)  # Calculate total frequency for each category
+
+# Create a horizontal bar plot
+fig, ax = plt.subplots()
+bottom = np.zeros(len(categories))
+colors = ['tab:blue', 'tab:orange', 'tab:green']  # Colors for each phase
+
+for i, phase in enumerate(phases):
+    frequencies_percentage = frequencies[:, i] / total_frequencies * 100
+    ax.barh(categories, frequencies_percentage, left=bottom, color=colors[i], label=phase)
+    bottom += frequencies_percentage
+
+# Set labels and title
+plt.xlabel('NP volume fraction [%]', fontsize=14)
+plt.ylabel('c-type time step', fontsize=14)
+plt.title('NP state distribution over time', fontsize=16, fontweight='bold')
+
+# Set legend outside of the plot and adjust size
+legend = ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), prop={'size': 12})
+
+# Adjust tick sizes
+plt.tick_params(axis='both', which='major', labelsize=12)
+
+# Display the plot
+plt.show()
+
+#%%
+
+def show_orthoslices(time_step):
+    
+    #Here scalebars for the orthoslices are defined according to the pixel size
+    scalebar0 = ScaleBar(pixel_size, 'um', location='lower right', frameon='None')
+    scalebar1 = ScaleBar(pixel_size, 'um', location='lower right', frameon='None')
+    scalebar2 = ScaleBar(pixel_size, 'um', location='lower right', frameon='None')
+
+    #A figure consisting of 3 subfigures is created. Each subfigure is a different orthoslice
+
+    fig, ax = plt.subplots(1,3,figsize=(16,6))
+    
+    ax[0].imshow(time_step[time_step.shape[2]//2,:,:], cmap=('Greys_r'))
+    ax[0].set_title('Sagittal view')
+    ax[0].add_artist(scalebar0)
+    ax[1].imshow(time_step[:,time_step.shape[2]//2,:], cmap=('Greys_r'))
+    ax[1].set_title('Coronal view')
+    ax[1].add_artist(scalebar1)
+    ax[2].imshow(time_step[:,:,time_step.shape[2]//2], cmap=('Greys_r'))
+    ax[2].set_title('Axial view')
+    ax[2].add_artist(scalebar2)
+    
+    plt.show()
