@@ -17,12 +17,12 @@ def image_error(image1, image2):
 
 #%%
 
-step_00 = tifffile.imread("/path/to/t0.tif")
-step_01 = tifffile.imread("/path/to/t1.tif")
-reg_00_01 = tifffile.imread("/path/to/t0/correlated/to/t1/using/registerMultiscale.tif")
-reg_opt_00_01 = tifffile.imread("/path/to/t0/correlated/to/t1/using/registerMultiscale/and/opticalflow.tif")
-pxsddic_00_01 = tifffile.imread("/path/to/t0/correlated/to/t1/using/pixelsearch/and/DDIC.tif.tif")
-opt_00_01 = tifffile.imread("/path/to/t0/correlated/to/t1/using/opticalflow.tif")
+step_00 = tifffile.imread("/path/to/step_00.tif")
+step_01 = tifffile.imread("/path/to/step_01.tif")
+reg_00_01 = tifffile.imread("/path/to/reg_00_01.tif")
+reg_opt_00_01 = tifffile.imread("/path/to/reg_opt_00_01.tif")
+pxsddic_00_01 = tifffile.imread("/path/to/pxsddic_00_01.tif")
+opt_00_01 = tifffile.imread("/path/to/opt_00_01.tif")
 
 #%%
 
