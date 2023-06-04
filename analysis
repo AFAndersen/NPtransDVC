@@ -19,17 +19,17 @@ import spam.label
 import time
 
 # Define the path of the time zero image
-t0 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/bin2_series/step_00.tif"
+t0 = "/path/to/step_00.tif"
 
 #Define the path of the t0 grain mask
-t0_mask = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/bin2_label.tif"
+t0_mask = "/path/to/bin2_label.tif"
 
 # Define the path of the difference images
-d1 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-01.tif"
-d2 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-02.tif"
-d3 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-03.tif"
-d4 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-04.tif"
-d5 = "/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/Shared/deltas_reg/delta-reg-00-05.tif"
+d1 = "/path/to/delta-reg-00-01.tif"
+d2 = "/path/to/delta-reg-00-02.tif"
+d3 = "/path/to/delta-reg-00-03.tif"
+d4 = "/path/to/delta-reg-00-04.tif"
+d5 = "/path/to/delta-reg-00-05.tif"
 
 # An array of names and paths are defined
 time_step_names = np.array(['t0', 'd1', 'd2', 'd3', 'd4', 'd5'])
@@ -67,8 +67,8 @@ results = []
 for i in range(1, len(time_steps)):
     results.append(np.extract(hist_mask, time_steps[i]))
 
-# Subtract the distribution of d1 from d19
-data = results[18]-results[0]
+# Subtract the distribution of d1 from d5
+data = results[4]-results[0]
 
 # Calculate the mean and standard deviation of the resulting distribution
 mean = np.mean(data)
@@ -93,7 +93,7 @@ plt.axvline(line_pos, color='black', linestyle='--', label='Threshold')
 # Set labels and title with modified font size
 plt.xlabel('Voxel value', fontsize=14)
 plt.ylabel('Frequency / Probability Density', fontsize=14)
-plt.title('d19 histogram with fitted Gaussian Curve', fontsize=16, fontweight='bold')
+plt.title('d5 histogram with fitted Gaussian Curve', fontsize=16, fontweight='bold')
 
 # Set legend font size
 plt.legend(fontsize=12)
@@ -138,10 +138,10 @@ for i in range(len(binary_time_steps)):
 slices = np.arange(len(layer_sums[0]))
 
 plt.plot(slices, layer_sums[1], '-', color='r', label='d1')
-plt.plot(slices, layer_sums[7], '-', color='b', label='d7')
-plt.plot(slices, layer_sums[10], '-', color='violet', label='d10')
-plt.plot(slices, layer_sums[13], '-', color='g', label='d13')
-plt.plot(slices, layer_sums[19], '-', color='y', label='d19')
+plt.plot(slices, layer_sums[2], '-', color='b', label='d7')
+plt.plot(slices, layer_sums[3], '-', color='violet', label='d10')
+plt.plot(slices, layer_sums[4], '-', color='g', label='d13')
+plt.plot(slices, layer_sums[5], '-', color='y', label='d19')
 plt.xlabel('Slice number', fontsize=12)
 plt.ylabel('Sum of layer, [#Pixels]', fontsize=12)
 plt.title('Sum of each Layer', fontsize=14, fontweight='bold')
@@ -157,10 +157,10 @@ slices = np.arange(len(layer_sums[0]))
 layer_sums_d1 = (layer_sums-layer_sums[1])
 
 plt.plot(slices, layer_sums[1], '-', color='r', label='d1')
-plt.plot(slices, layer_sums_d1[7], '-', color='b', label='d7-d1')
-plt.plot(slices, layer_sums_d1[10], '-', color='violet', label='d10-d1')
-plt.plot(slices, layer_sums_d1[13], '-', color='g', label='d13-d1')
-plt.plot(slices, layer_sums_d1[19], '-', color='y', label='d19-d1')
+plt.plot(slices, layer_sums_d1[2], '-', color='b', label='d2-d1')
+plt.plot(slices, layer_sums_d1[3], '-', color='violet', label='d3-d1')
+plt.plot(slices, layer_sums_d1[4], '-', color='g', label='d4-d1')
+plt.plot(slices, layer_sums_d1[5], '-', color='y', label='d-d1')
 plt.xlabel('XY-slice', fontsize=14)
 plt.ylabel('NP volume, [#voxels]', fontsize=14)
 plt.title('NP volume of XY-slices', fontsize=16, fontweight='bold')
@@ -177,10 +177,9 @@ for i in range(1, len(layer_um)):
     layer_fracs.append((layer_um[i]/(vols_um[i-1]-vols_um[0]))*100)
 
 plt.plot(slices, layer_fracs[1], '-', color='r', label='d2')
-plt.plot(slices, layer_fracs[3], '-', color='b', label='d4')
-plt.plot(slices, layer_fracs[5], '-', color='violet', label='d6')
-plt.plot(slices, layer_fracs[14], '-', color='g', label='d15')
-plt.plot(slices, layer_fracs[18], '-', color='y', label='d19')
+plt.plot(slices, layer_fracs[2], '-', color='b', label='d3')
+plt.plot(slices, layer_fracs[3], '-', color='violet', label='d4')
+plt.plot(slices, layer_fracs[4], '-', color='g', label='d5')
 plt.xlabel('XY-slice', fontsize=14)
 plt.ylabel('NP volume fraction [%]', fontsize=14)
 plt.title('NP volume fraction of XY-slices', fontsize=16, fontweight='bold')
@@ -225,10 +224,9 @@ for i in range(len(vols)):
     print(i)
 
 plt.plot(np.sort(vols[2]), vols_cf[2], '-', color='r', label='t2')
-plt.plot(np.sort(vols[7]), vols_cf[7], '-', color='b', label='t7')
-plt.plot(np.sort(vols[10]), vols_cf[10], '-', color='g', label='t10')
-plt.plot(np.sort(vols[14]), vols_cf[14], '-', color='y', label='t14')
-plt.plot(np.sort(vols[18]), vols_cf[18], '-', color='black', label='t19')
+plt.plot(np.sort(vols[7]), vols_cf[3], '-', color='b', label='t3')
+plt.plot(np.sort(vols[10]), vols_cf[4], '-', color='g', label='t4')
+plt.plot(np.sort(vols[14]), vols_cf[5], '-', color='y', label='t5')
 plt.xlabel('NP cluster size [#Pixels]', fontsize=12)
 plt.ylabel('Cummulated frequency', fontsize=12)
 plt.title('Cumulated frequency', fontsize=14, fontweight='bold')
@@ -403,9 +401,9 @@ for i in range(1,len(binary_time_steps)-1):
 
 
 
-pos_counts = np.zeros(18)
-zero_counts = np.zeros(18)
-neg_counts = np.zeros(18)
+pos_counts = np.zeros(5)
+zero_counts = np.zeros(5)
+neg_counts = np.zeros(5)
 for i in range(len(pos_counts)):
     pos_counts[i] = counts[i][0]
     zero_counts[i] = counts[i][1]
