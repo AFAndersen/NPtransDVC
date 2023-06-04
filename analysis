@@ -49,7 +49,6 @@ for i in range(len(time_step_names)):
 binning = 2
 pixel_size = binning*1.35
 
-
 #crop the volume in the top and in the bottom by two slices, and print the new shape of the volume
 Z, Y, X = time_steps[0].shape
 time_steps_c = []
@@ -59,7 +58,7 @@ for i in range(len(time_step_names)):
 
 Z, Y, X = time_steps_c[0].shape
 print(Z)
-
+#%%
 #load the t0 grain mask, and use the inverse mask to extract intensity value distribution of the pore space in the difference images
 hist_mask = tifffile.imread(t0_mask)
 hist_mask = hist_mask == 0
@@ -67,7 +66,7 @@ results = []
 for i in range(1, len(time_steps)):
     results.append(np.extract(hist_mask, time_steps[i]))
 
-# Subtract the distribution of d1 from d5
+# Subtract the distribution of d1 from d5. This should ideally be done using d19 instead of d5
 data = results[4]-results[0]
 
 # Calculate the mean and standard deviation of the resulting distribution
@@ -102,7 +101,7 @@ plt.legend(fontsize=12)
 plt.show()
 
 #set the threshold value that segments the nanoparticles
-threshold = np.std(results[18])*2+np.mean(results[18])
+threshold = np.std(results[4])*2+np.mean(results[4])
 
 #create the binary images of nanoparticles
 binary_time_steps = []
@@ -114,13 +113,13 @@ for i in range(len(time_steps_c)):
 
 #%%
 
-#Create the labelled images 
+#Create the labelled images.
 labels = []
 for i in range(1,len(binary_time_steps)):
     label = skimage.measure.label(binary_time_steps[i], connectivity=3)
     labels.append(label)
-    save_path = '/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/labelled_NPs/'+time_step_names[i]+'_labelled_NP_2sigma.tif'
-    tifffile.imwrite(save_path, label)
+    #save_path = 'path/to/labelled_NPs/'+time_step_names[i]+'_labelled_NP_2sigma.tif'
+    #tifffile.imwrite(save_path, label)
     print(i)
 
 
@@ -142,9 +141,9 @@ plt.plot(slices, layer_sums[2], '-', color='b', label='d7')
 plt.plot(slices, layer_sums[3], '-', color='violet', label='d10')
 plt.plot(slices, layer_sums[4], '-', color='g', label='d13')
 plt.plot(slices, layer_sums[5], '-', color='y', label='d19')
-plt.xlabel('Slice number', fontsize=12)
-plt.ylabel('Sum of layer, [#Pixels]', fontsize=12)
-plt.title('Sum of each Layer', fontsize=14, fontweight='bold')
+plt.xlabel('XY-slice', fontsize=14)
+plt.ylabel('NP volume, [#voxels]', fontsize=14)
+plt.title('NP volume of XY-slices', fontsize=16, fontweight='bold')
 plt.grid(False)
 plt.legend(loc='upper left', fontsize=10)
 plt.show()
@@ -160,7 +159,7 @@ plt.plot(slices, layer_sums[1], '-', color='r', label='d1')
 plt.plot(slices, layer_sums_d1[2], '-', color='b', label='d2-d1')
 plt.plot(slices, layer_sums_d1[3], '-', color='violet', label='d3-d1')
 plt.plot(slices, layer_sums_d1[4], '-', color='g', label='d4-d1')
-plt.plot(slices, layer_sums_d1[5], '-', color='y', label='d-d1')
+plt.plot(slices, layer_sums_d1[5], '-', color='y', label='d5-d1')
 plt.xlabel('XY-slice', fontsize=14)
 plt.ylabel('NP volume, [#voxels]', fontsize=14)
 plt.title('NP volume of XY-slices', fontsize=16, fontweight='bold')
@@ -224,9 +223,8 @@ for i in range(len(vols)):
     print(i)
 
 plt.plot(np.sort(vols[2]), vols_cf[2], '-', color='r', label='t2')
-plt.plot(np.sort(vols[7]), vols_cf[3], '-', color='b', label='t3')
-plt.plot(np.sort(vols[10]), vols_cf[4], '-', color='g', label='t4')
-plt.plot(np.sort(vols[14]), vols_cf[5], '-', color='y', label='t5')
+plt.plot(np.sort(vols[3]), vols_cf[3], '-', color='b', label='t3')
+plt.plot(np.sort(vols[4]), vols_cf[4], '-', color='g', label='t4')
 plt.xlabel('NP cluster size [#Pixels]', fontsize=12)
 plt.ylabel('Cummulated frequency', fontsize=12)
 plt.title('Cumulated frequency', fontsize=14, fontweight='bold')
@@ -314,11 +312,9 @@ plt.show()
 
 import localthickness as lt
 
-bin_vol = tifffile.imread("/zhome/b5/6/156017/Desktop/2023_DVC_group/analysis/Aske/bin2_label.tif")
+bin_vol = tifffile.imread(t0_mask)
 bin_vol = bin_vol>0
 
-# Compute local thickness using scaled approach.
-thickness = lt.local_thickness(bin_vol, scale=0.25)
 
 #%%
 
@@ -401,9 +397,9 @@ for i in range(1,len(binary_time_steps)-1):
 
 
 
-pos_counts = np.zeros(5)
-zero_counts = np.zeros(5)
-neg_counts = np.zeros(5)
+pos_counts = np.zeros(4)
+zero_counts = np.zeros(4)
+neg_counts = np.zeros(4)
 for i in range(len(pos_counts)):
     pos_counts[i] = counts[i][0]
     zero_counts[i] = counts[i][1]
