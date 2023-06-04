@@ -459,7 +459,7 @@ plt.tick_params(axis='both', which='major', labelsize=12)
 plt.show()
 
 #%%
-
+#This function can e used for displaying volume orthoslices
 def show_orthoslices(time_step):
     
     #Here scalebars for the orthoslices are defined according to the pixel size
