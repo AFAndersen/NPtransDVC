@@ -12,5 +12,5 @@ The calculate_mean_sum_of_squared_differences can be used for calculating the er
 the corrected t0 images should be loaded as well as the time step 1 and time step 2 image data.
 
 The analysis script takes care of segmenting the nanoparticle phase using the difference images. To run the script, the t0 images should be loaded as well as
-the difference images resulting from the DVC_registerMultiscale script. The t0 grain mask should also be loaded. The script should ideally be run as a notebook, one section as a time.
+the difference images resulting from the DVC_registerMultiscale script. The t0 grain mask should also be loaded. The script should ideally be run as a notebook, one section as a time. The threshold used for segmenting the NP-phase in the difference images is found i a different way than in the thesis handed in, to correct for oversegmentation.
 
