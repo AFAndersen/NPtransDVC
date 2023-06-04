@@ -167,27 +167,8 @@ plt.grid(False)
 plt.legend(loc='upper left', fontsize=10)
 plt.show()
 
-#%%
-
-layer_um = (layer_sums_d1*np.ones(len(slices))*(10**(-9))*(pixel_size**3))
-
-layer_fracs = []
-for i in range(1, len(layer_um)):
-    layer_fracs.append((layer_um[i]/(vols_um[i-1]-vols_um[0]))*100)
-
-plt.plot(slices, layer_fracs[1], '-', color='r', label='d2')
-plt.plot(slices, layer_fracs[2], '-', color='b', label='d3')
-plt.plot(slices, layer_fracs[3], '-', color='violet', label='d4')
-plt.plot(slices, layer_fracs[4], '-', color='g', label='d5')
-plt.xlabel('XY-slice', fontsize=14)
-plt.ylabel('NP volume fraction [%]', fontsize=14)
-plt.title('NP volume fraction of XY-slices', fontsize=16, fontweight='bold')
-plt.grid(False)
-plt.legend(loc='upper left', fontsize=10)
-plt.show()
 
 #%%
-
 #plot how the total volume of NPs evolve with time
 step = np.arange(1, len(binary_time_steps))
 vol_sums = []
@@ -198,6 +179,38 @@ plt.plot(step, vol_sums, '-', color='r', label='NP volume')
 plt.xlabel('Time step', fontsize=12)
 plt.ylabel('Sum of NPs, [#voxels]', fontsize=12)
 plt.title('Sum of each time step', fontsize=14, fontweight='bold')
+plt.grid(False)
+plt.legend(loc='upper left', fontsize=10)
+plt.show()
+
+#%%
+
+vols_um = np.zeros(len(vol_sums))
+for i in range(len(vol_sums)):
+    vols_um[i]=(vol_sums[i]*(pixel_size**3))/(10**9)
+
+plt.plot(step, vols_um-vols_um[0], '-', color='r', label='NP volume')
+plt.xlabel('Difference time step', fontsize=14)
+plt.ylabel('NP volume, [mm³]', fontsize=14)
+plt.title('Total NP volume over time', fontsize=16, fontweight='bold')
+plt.grid(False)
+plt.legend(loc='upper left', fontsize=10)
+plt.show()
+
+#%%
+
+layer_um = (layer_sums_d1*np.ones(len(slices))*(10**(-9))*(pixel_size**3))
+
+layer_fracs = []
+for i in range(1, len(layer_um)):
+    layer_fracs.append((layer_um[i]/(vols_um[i-1]-vols_um[0]))*100)
+
+plt.plot(slices, layer_fracs[1], '-', color='r', label='d2')
+plt.plot(slices, layer_fracs[3], '-', color='b', label='d4')
+plt.plot(slices, layer_fracs[4], '-', color='violet', label='d6')
+plt.xlabel('XY-slice', fontsize=14)
+plt.ylabel('NP volume fraction [%]', fontsize=14)
+plt.title('NP volume fraction of XY-slices', fontsize=16, fontweight='bold')
 plt.grid(False)
 plt.legend(loc='upper left', fontsize=10)
 plt.show()
